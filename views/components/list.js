@@ -11,13 +11,12 @@ export default class ListNews extends Component {
 
   componentWillReceiveProps(nextProps){
     this.setState(() => { return { data: nextProps.data.data }})
-    console.log(this.state)
   }
   render() {
     return ( 
       <View>
       { this.state.data.map((e, i) =>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('Details', { data: this.state.data})} key={i}>
+            <TouchableHighlight onPress={() => this.props.navigation.navigate('Details', { data: e})} key={i}>
               <View style={styles.cardContainer}>
                 <ImageNews image={e.image} styles={styles.image}/>
                 <View style={styles.textContainer}>

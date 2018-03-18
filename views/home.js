@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native';
-import ListNews from './components/list.js'
+import ListNews from './components/list.js';
+import SearchInput from './components/search-input.js';
 
 
 const cardComponentsFinal = [];
@@ -45,7 +46,7 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <ScrollView style={{width:screenWidth}}>
           <Text style={styles.font}>Welcome to your News Feed</Text>
-          {/* <SearchInput onUpdate={this.onUpdate}></SearchInput> */}
+          <SearchInput onUpdate={this.onUpdate}></SearchInput>
           <ListNews data={{data: this.state.data}} navigation={this.props.navigation}></ListNews>
         </ScrollView>
       </View>
