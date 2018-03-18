@@ -40,6 +40,16 @@ export default class HomeScreen extends React.Component {
       });
   };
 
+  onUpdate = (val) => {
+    filteredNews = cardComponentsFinal;
+    if(val != '') {
+      let search = new RegExp(val, "gi");
+      filteredNews = cardComponentsFinal.filter(elem => search.test(elem.title));
+    }
+    this.setState(() => { return { data: filteredNews }})
+    this.forceUpdate();
+  };
+
   render() {
     const screenWidth = Dimensions.get('window').width
     return (

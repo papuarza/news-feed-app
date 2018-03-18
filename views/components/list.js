@@ -11,6 +11,7 @@ export default class ListNews extends Component {
 
   componentWillReceiveProps(nextProps){
     this.setState(() => { return { data: nextProps.data.data }})
+    this.forceUpdate();
   }
   render() {
     return ( 
@@ -18,10 +19,10 @@ export default class ListNews extends Component {
       { this.state.data.map((e, i) =>
             <TouchableHighlight onPress={() => this.props.navigation.navigate('Details', { data: e})} key={i}>
               <View style={styles.cardContainer}>
-                <ImageNews image={e.image} styles={styles.image}/>
+                <ImageNews data={{image: e.image, styles: styles.image}}/>
                 <View style={styles.textContainer}>
                   <Title data={{title: e.title, styles: styles.title, limit: 2}}></Title>
-                  <Description description={e.description} limit={2}/>
+                  <Description data={{description: e.description, limit: 2}}/>
                 </View>
               </View>
             </TouchableHighlight>

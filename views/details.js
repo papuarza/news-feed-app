@@ -10,8 +10,8 @@ export default class DetailScreen extends Component {
       <View style={styles.container}>
         <ScrollView style={{width:screenWidth}}>
           <Title data={{title: data.title, styles: styles.title, limit: undefined}}></Title>
-          <ImageNews image={data.image} styles={styles.image}></ImageNews>
-          <Description description={data.description} limit={undefined} styles={styles.description}></Description>
+          <ImageNews data={{image: data.image, styles: styles.image}}></ImageNews>
+          <Description data={{description: data.description, styles: styles.description, limit: undefined}}></Description>
           <View style={styles.button}>
           <Button title="Read it!" color="#fff" onPress={ ()=>{ Linking.openURL(data.url)}}/>
           </View>
