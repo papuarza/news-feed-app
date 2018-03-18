@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Dimensions, AsyncStorage, RefreshControl} from 'react-native';
 import ListNews from './components/list.js';
 import SearchInput from './components/search-input.js';
 
@@ -9,15 +9,32 @@ const cardComponentsFinal = [];
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data: cardComponentsFinal};
+    this.state = {data: cardComponentsFinal, refreshing: false};
   }
 
   componentDidMount() {
+    this.getLocal();
     this.makeRemoteRequest();
   }
 
+  async saveLocal(value) {
+    try {
+      await AsyncStorage.setItem('@MySuperStore:key', value);
+    } catch (error) {
+      console.log("Error saving data" + error);
+    }
+  }
+
+  async getLocal() {
+    try {
+      const value = await AsyncStorage.getItem('@MySuperStore:key');
+      this.setState({ data: JSON.parse(value) });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   makeRemoteRequest = () => {
-    const { page, seed } = this.state;
     const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=a95a4f6ca0b842fe9da021db65de8d4e`;
     fetch(url)
       .then(res => res.json())
@@ -33,10 +50,11 @@ export default class HomeScreen extends React.Component {
           }
         });
         cardComponentsFinal = data;
-        this.setState({ data: data });
+        this.saveLocal(JSON.stringify(cardComponentsFinal));
+        this.setState({ data: data, refreshing: false });
       })
       .catch(error => {
-        this.setState({ error, loading: false });
+        console.log(error)
       });
   };
 
@@ -50,11 +68,16 @@ export default class HomeScreen extends React.Component {
     this.forceUpdate();
   };
 
+  onRefresh() {
+    this.setState({refreshing: true});
+    this.makeRemoteRequest();
+  }
+
   render() {
     const screenWidth = Dimensions.get('window').width
     return (
       <View style={styles.container}>
-        <ScrollView style={{width:screenWidth}}>
+        <ScrollView style={{width:screenWidth}} refreshControl={ <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh.bind(this)} /> }>
           <Text style={styles.font}>Welcome to your News Feed</Text>
           <SearchInput onUpdate={this.onUpdate}></SearchInput>
           <ListNews data={{data: this.state.data}} navigation={this.props.navigation}></ListNews>
